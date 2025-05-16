@@ -1,0 +1,84 @@
+/* Remove default bullets and style cubes as custom bullets */
+.news-list {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+  display: flex;
+  white-space: nowrap;
+  animation: scrollNews 20s linear infinite;
+}
+
+.news-list {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: 2rem;
+    font-size: 1.2rem;
+    animation: scroll-left 30s linear infinite;
+    will-change: transform;
+}
+
+@keyframes scroll-left {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+
+.news-cube {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  z-index: 10; /* higher z-index to appear in front */
+  pointer-events: none; /* allow clicks to pass through cube */
+  flex-shrink: 0;
+}
+
+.news-cube-inner {
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  animation: rotateCube 5s linear infinite;
+}
+
+.news-cube-face {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: #3498db;
+  border: 1px solid #2980b9;
+  opacity: 0.8;
+}
+
+/* Position faces of the cube */
+.news-cube-face.front  { transform: translateZ(15px); }
+.news-cube-face.back   { transform: rotateY(180deg) translateZ(15px); }
+.news-cube-face.right  { transform: rotateY(90deg) translateZ(15px); }
+.news-cube-face.left   { transform: rotateY(-90deg) translateZ(15px); }
+.news-cube-face.top    { transform: rotateX(90deg) translateZ(15px); }
+.news-cube-face.bottom { transform: rotateX(-90deg) translateZ(15px); }
+
+@keyframes rotateCube {
+  from { transform: rotateX(0deg) rotateY(0deg); }
+  to { transform: rotateX(360deg) rotateY(360deg); }
+}
+
+@keyframes scrollNews {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.news-list li a {
+  position: relative;
+  z-index: 1; /* lower z-index so cubes appear in front */
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+}

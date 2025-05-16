@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jigyasa Search Engine</title>
-    <link rel="stylesheet" href="Assets/CSS/style.css">
+    <link rel="stylesheet" href="Assets/css/style.css">
+
+    <!-- ✅ Add this line -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script defer src="Assets/java/script.js"></script>
 </head>
@@ -47,18 +51,20 @@ if ($weather_data && isset($weather_data['main'])) {
 ?>
 
 <body>
+    <video autoplay muted loop playsinline class="background-video">
+        <source src="Assets/images/88425-607855984.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
     <!-- Top Bar -->
     <div class="top-bar">
-        <div class="location"
-        " id="location"><?php echo $user_city; ?></div>
+        <div class="location" id="location"><?php echo $user_city; ?></div>
         <div class="weather" id="weather"><?php echo $weather_temp; ?></div>
-        <div class="settings">⚙️</div>
     </div>
 
     <!-- Search Box -->
-    <div class="search-container">
-        <div class="logo">Jigyasa</div>
-        <form class="search-bar" action="https://www.google.com/search" method="get" onsubmit="return validateSearch();">
+    <div class="search-container" style="background-color: transparent; box-shadow: none; border-radius: 0;">
+        <div class="logo" style="margin:0; padding:0;"><img src="Assets/images/Gemini_Generated_Image_budmw9budmw9budm-removebg-preview.png" alt="Jigyasa Logo" style="height:288px;"></div>
+        <form class="search-bar" style="margin:0; padding:0;" action="https://www.google.com/search" method="get" onsubmit="return validateSearch();">
             <input type="text" name="q" id="searchInput" placeholder="Search Jigyasa...">
             <button type="submit">🔍</button>
             <button type="button" class="voice-search" onclick="startVoiceSearch()">🎤</button>
@@ -66,12 +72,14 @@ if ($weather_data && isset($weather_data['main'])) {
     </div>
 
     <!-- Scrolling News Section -->
-    <div class="scrolling-news">
-        <div class="news-content" id="newsTicker">Fetching latest updates...</div>
+    <div class="news-section" style="background: none; box-shadow: none; border-radius: 0;">
+        <div class="news-ticker-container" style="background: none; box-shadow: none;">
+            <ul class="news-list" id="newsTicker">
+                <!-- News items will be dynamically inserted here -->
+                <li><a href="#"><div class="news-cube"><div class="news-cube-inner"><div class="news-cube-face front"></div><div class="news-cube-face back"></div><div class="news-cube-face right"></div><div class="news-cube-face left"></div><div class="news-cube-face top"></div><div class="news-cube-face bottom"></div></div></div> India signs major defense deal</a></li>
+                <li><a href="#"><div class="news-cube"><div class="news-cube-inner"><div class="news-cube-face front"></div><div class="news-cube-face back"></div><div class="news-cube-face right"></div><div class="news-cube-face left"></div><div class="news-cube-face top"></div><div class="news-cube-face bottom"></div></div></div> SpaceX launches 50 satellites</a></li>
+            </ul>
+        </div>
     </div>
-
-
-
-
 </body>
 </html>

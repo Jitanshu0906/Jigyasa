@@ -1,4 +1,3 @@
-// Validate search bar input
 function validateSearch() {
     const searchInput = document.getElementById('searchInput');
     if (searchInput.value.trim() === '') {
@@ -8,7 +7,6 @@ function validateSearch() {
     return true;
 }
 
-// Voice search
 function startVoiceSearch() {
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.onresult = function(event) {
@@ -17,12 +15,10 @@ function startVoiceSearch() {
     recognition.start();
 }
 
-// Fetch user location & weather
 function fetchLocationAndWeather() {
     navigator.geolocation.getCurrentPosition(position => {
         const { latitude, longitude } = position.coords;
 
-        // Fetch location name with better error handling
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
             .then(response => {
                 if (!response.ok) throw new Error('Location service unavailable');
@@ -43,7 +39,6 @@ function fetchLocationAndWeather() {
                 document.getElementById('location').textContent = 'Location service unavailable';
             });
 
-        // Enhanced weather fetching with OpenWeatherMap API
         function fetchWeather(retryCount = 0) {
             const maxRetries = 2;
             const weatherEl = document.getElementById('weather');
@@ -78,17 +73,86 @@ function fetchLocationAndWeather() {
     });
 }
 
-// Fetch latest news
-
 function fetchNews() {
-    document.getElementById('newsTicker').textContent = 'Loading latest news...';
+    const newsTicker = document.getElementById('newsTicker');
+    newsTicker.innerHTML = '';
     fetch('news.json')
         .then(response => response.json())
         .then(data => {
-            const newsText = data.map(item => item.formatted).join('\n');
-            document.getElementById('newsTicker').textContent = newsText;
+            data.forEach(item => {
+                const li = document.createElement('li');
+
+                const cube = document.createElement('div');
+                cube.className = 'news-cube';
+
+                const cubeInner = document.createElement('div');
+                cubeInner.className = 'news-cube-inner';
+
+                const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+                faces.forEach(face => {
+                    const faceDiv = document.createElement('div');
+                    faceDiv.className = 'news-cube-face ' + face;
+                    cubeInner.appendChild(faceDiv);
+                });
+
+                cube.appendChild(cubeInner);
+
+                const a = document.createElement('a');
+                a.href = item.link;
+                a.textContent = item.title;
+                a.target = '_blank';
+
+                li.appendChild(cube);
+                li.appendChild(a);
+
+                newsTicker.appendChild(li);
+            });
+        })
+        .catch(() => {
+            newsTicker.innerHTML = '<li class="error">Failed to load news.</li>';
         });
 }
+
+function createRotatingCube() {
+    // Removed as per user request
+}
+
+window.onload = () => {
+  const theme = localStorage.getItem('theme') || 'dark';
+  if (theme === 'light-theme') {
+    document.body.className = 'light-theme';
+  } else {
+    document.body.className = '';
+  }
+};
+
+function toggleTheme() {
+  const isLight = document.body.classList.contains('light-theme');
+  if (isLight) {
+    document.body.classList.remove('light-theme');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.body.classList.add('light-theme');
+    localStorage.setItem('theme', 'light-theme');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const settingsButton = document.getElementById('settingsButton');
+  const settingsDropdown = document.getElementById('settingsDropdown');
+
+  // Settings button toggle dropdown
+  settingsButton.addEventListener('click', () => {
+    settingsDropdown.classList.toggle('active');
+  });
+
+  // Close dropdown if clicked outside
+  document.addEventListener('click', (event) => {
+    if (!settingsButton.contains(event.target) && !settingsDropdown.contains(event.target)) {
+      settingsDropdown.classList.remove('active');
+    }
+  });
+});
 
 // Initialize on page load
 fetchLocationAndWeather();

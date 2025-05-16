@@ -7,10 +7,9 @@ body {
     color: #fff;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Center content vertically */
     height: 100vh;
     overflow: hidden;
+    position: relative;
 }
 
 /* Top Bar */
@@ -20,15 +19,115 @@ body {
     right: 20px;
     display: flex;
     gap: 20px;
+    z-index: 2;
 }
 
-.location, .weather, .settings {
-    font-size: 1.2rem;
+/* Settings Dropdown */
+.settings {
+    position: relative;
+}
+
+.settings-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: rgba(0, 0, 0, 0.65);
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 5px;
+    z-index: 10;
+    min-width: 120px;
+}
+
+/* Show dropdown when active */
+.settings-dropdown.active {
+    display: block;
+}
+
+/* Theme Toggle Container */
+.theme-toggle-container {
+    width: 120px;
+    height: 60px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-family: sans-serif;
 }
 
-/* Centered Search Container */
+/* Toggle Switch */
+.toggle {
+    width: 120px;
+    height: 60px;
+    border-radius: 50px;
+    position: relative;
+    transition: background 0.5s ease;
+    background: transparent;
+}
+
+/* Circle */
+.circle {
+    width: 20px;
+    height: 20px;
+    background: #fdd835;
+    border-radius: 50%;
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    transition: transform 0.5s ease, background 0.5s ease;
+}
+
+/* Circle position when toggled to dark */
+.circle.dark {
+    transform: translateX(80px);
+}
+
+/* Dark Theme (default) */
+body {
+    --bg-color: #000;
+    --text-color: #00ffa2;
+    --search-bg: rgba(0, 0, 0, 0.7);
+    --search-input-bg: rgba(255, 255, 255, 0.1);
+    --news-bg: transparent;
+    --news-text-color: green;
+}
+
+/* Light Theme */
+body.light-theme {
+    --bg-color: #fff;
+    --text-color: #007f5f;
+    --search-bg: #f0f0f0;
+    --search-input-bg: #fff;
+    --news-bg: transparent;
+    --news-text-color: #007f5f;
+}
+
+/* Background video styling */
+.background-video {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    pointer-events: none;
+}
+
+body.light-theme .background-video {
+    display: block;
+}
+
+/* Apply theme variables */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
 .search-container {
+    background: var(--search-bg);
     text-align: center;
     background: rgba(0, 0, 0, 0.7);
     padding: 2.5rem;
@@ -37,9 +136,14 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Ensure perfect centering */
+    transform: translate(-50%, -50%);
     width: 50%;
     max-width: 700px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Logo Styling */
@@ -48,6 +152,8 @@ body {
     font-weight: bold;
     color: #00ffa2;
     margin-bottom: 1rem;
+    text-align: center;
+    width: 100%;
 }
 
 /* Search Bar */
@@ -56,6 +162,9 @@ body {
     border: 2px solid #00ffa2;
     border-radius: 30px;
     overflow: hidden;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .search-bar input {
@@ -77,29 +186,82 @@ body {
     cursor: pointer;
 }
 
-/* Scrolling News */
-.scrolling-news {
+/* News Section at Bottom */
+.news-section {
     position: absolute;
-    bottom: 20px;
-    width: 90%;
+    bottom: 0;
+    width: 100%;
+    background: transparent;
+    padding: 1rem 0;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.4);
     overflow: hidden;
-    text-align: center;
+    z-index: 3;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
 }
 
-.news-content {
-    display: inline-block;
-    animation: marquee 15s linear infinite;
+/* News List Items */
+.news-list {
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    color: green;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+    gap: 2rem;
     font-size: 1.2rem;
-    color: #fff;
 }
 
-@keyframes marquee {
-    from { transform: translateX(100%); }
-    to { transform: translateX(-100%); }
+/* Rotating Cube Container */
+.news-cube {
+    width: 15px;
+    height: 15px;
+    perspective: 400px;
+    flex-shrink: 0;
+    position: relative;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 10px #00ffa2;
 }
 
-/* Error styling */
-.error {
-    color: #ff4444;
-    font-style: italic;
+/* Cube Inner */
+.news-cube-inner {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    transform-style: preserve-3d;
+    animation: rotateCube 3s linear infinite;
+    border: 1.5px solid #00ffa2;
+    background-color: white;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+/* Cube faces for small cube */
+.news-cube-face {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: white;
+    border: 1.5px solid #00ffa2;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+/* Position each face */
+.news-cube-face.front  { transform: translateZ(7.5px); }
+.news-cube-face.back   { transform: rotateY(180deg) translateZ(7.5px); }
+.news-cube-face.right  { transform: rotateY(90deg) translateZ(7.5px); }
+.news-cube-face.left   { transform: rotateY(-90deg) translateZ(7.5px); }
+.news-cube-face.top    { transform: rotateX(90deg) translateZ(7.5px); }
+.news-cube-face.bottom { transform: rotateX(-90deg) translateZ(7.5px); }
+
+/* Cube rotation animation */
+@keyframes rotateCube {
+    from { transform: rotateX(0deg) rotateY(0deg); }
+    to   { transform: rotateX(360deg) rotateY(360deg); }
 }
